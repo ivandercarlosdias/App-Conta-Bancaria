@@ -103,7 +103,7 @@ nav {
         border-bottom: 1px solid #eee;
     }
     &__tipo {
-        min-width: 120px;
+        min-width: 110px;
         padding: 5px 20px;
         text-transform: uppercase;
         font-weight: 500;
@@ -111,10 +111,10 @@ nav {
         color: #fff;
         border-radius: 15px;
         margin-right: 20px;
-        &--deposito {
+        &--entrada {
             background-image: linear-gradient(to top left, #39b385, #9be15d);
         }
-        &--saque {
+        &--saida {
             background-image: linear-gradient(to top left, #e52a5a, #ff585f);
         }
     }
@@ -130,8 +130,8 @@ nav {
     }
 }
 
-/* SUMMARY */
-.summary {
+/* SUMÁRIO */
+.sumario {
     grid-row: 5 / 6;
     display: flex;
     align-items: baseline;
@@ -141,13 +141,13 @@ nav {
         text-transform: uppercase;
         margin-right: 10px;
     }
-    &__value {
-        font-size: 24px;
+    &__valor {
+        font-size: 22px;
         margin-right: 30px;
-        &--in,&--interest {
+        &--entrada, &--juros {
             color: #66c873;
         }
-        &--out {
+        &--saida {
             color: #f5465d;
         }
     }
