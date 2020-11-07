@@ -60,13 +60,12 @@ nav {
   outline: none;
   border: none;
   background: none;
-  font-size: 25px;
+  font-size: 22px;
   color: inherit;
   cursor: pointer;
   transition: all 0.3s;
 }
 
-/* MAIN */
 .app {
   position: relative;
   max-width: 100%;
@@ -87,7 +86,7 @@ nav {
 }
 
 .balance__label {
-  font-size: 25px;
+  font-size: 22px;
   font-weight: 500;
 }
 
@@ -100,46 +99,48 @@ nav {
   font-weight: 400;
 }
 
-/* MOVEMENTS */
-.movements {
+.movimentos {
   grid-row: 2 / span 3;
   background-color: #fff;
   border-radius: 10px;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
-.movements__row {
-  padding: 20px 30px;
+.movimentos__item {
+  padding: 15px 30px;
   display: flex;
   align-items: center;
   border-bottom: 1px solid #eee;
 }
 
-.movements__type {
+.movimentos__tipo {
+  min-width: 120px;
+  padding: 5px 20px;
+  text-align: center;
   text-transform: uppercase;
   font-weight: 500;
+  font-size: 12px;
   color: #fff;
-  padding: 7px 15px;
   border-radius: 15px;
   margin-right: 20px;
 }
 
-.movements__type--deposit {
+.movimentos__tipo--deposito {
   background-image: linear-gradient(to top left, #39b385, #9be15d);
 }
 
-.movements__type--withdrawal {
+.movimentos__tipo--saque {
   background-image: linear-gradient(to top left, #e52a5a, #ff585f);
 }
 
-.movements__date {
+.movimentos__data {
   text-transform: uppercase;
   font-weight: 500;
   color: #666;
 }
 
-.movements__value {
-  font-size: 25px;
+.movimentos__valor {
+  font-size: 22px;
   margin-left: auto;
 }
 
@@ -179,7 +180,6 @@ nav {
   cursor: pointer;
 }
 
-/* OPERATIONS */
 .operation {
   border-radius: 10px;
   padding: 20px 30px;
@@ -241,7 +241,7 @@ h2 {
 .form__btn {
   border: none;
   border-radius: 10px;
-  font-size: 25px;
+  font-size: 22px;
   background-color: #fff;
   cursor: pointer;
   transition: all 0.3s;
