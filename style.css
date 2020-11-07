@@ -1,0 +1,262 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  color: #444;
+  background-color: #f3f3f3;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.welcome {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.logo {
+  width: 100%;
+  height: auto;
+  max-width: 80px;
+}
+
+.login {
+  display: flex;
+}
+
+.login__input {
+  border: none;
+  outline: none;
+  padding: 5px 10px;
+  font-size: 16px;
+  font-family: inherit;
+  text-align: center;
+  width: 120px;
+  border-radius: 20px;
+  margin-right: 10px;
+  color: inherit;
+  border: 1px solid #fff;
+  transition: all 0.3s;
+}
+
+.login__input:focus {
+  border: 1px solid #ccc;
+}
+
+.login__input::placeholder {
+  color: #bbb;
+}
+
+.login__btn {
+  outline: none;
+  border: none;
+  background: none;
+  font-size: 25px;
+  color: inherit;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+/* MAIN */
+.app {
+  position: relative;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: 4fr 3fr;
+  grid-template-rows: auto repeat(3, 140px) auto;
+  gap: 20px;
+  opacity: 1;
+  transition: all 1s;
+}
+
+.balance {
+  grid-column: 1 / span 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+.balance__label {
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.balance__date {
+  color: #888;
+}
+
+.balance__value {
+  font-size: 60px;
+  font-weight: 400;
+}
+
+/* MOVEMENTS */
+.movements {
+  grid-row: 2 / span 3;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: scroll;
+}
+
+.movements__row {
+  padding: 20px 30px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+}
+
+.movements__type {
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #fff;
+  padding: 7px 15px;
+  border-radius: 15px;
+  margin-right: 20px;
+}
+
+.movements__type--deposit {
+  background-image: linear-gradient(to top left, #39b385, #9be15d);
+}
+
+.movements__type--withdrawal {
+  background-image: linear-gradient(to top left, #e52a5a, #ff585f);
+}
+
+.movements__date {
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #666;
+}
+
+.movements__value {
+  font-size: 25px;
+  margin-left: auto;
+}
+
+/* SUMMARY */
+.summary {
+  grid-row: 5 / 6;
+  display: flex;
+  align-items: baseline;
+  padding: 0 5px;
+}
+
+.summary__label {
+  font-weight: 500;
+  text-transform: uppercase;
+  margin-right: 5px;
+}
+
+.summary__value {
+  font-size: 30px;
+  margin-right: 20px;
+}
+
+.summary__value--in, .summary__value--interest {
+  color: #66c873;
+}
+
+.summary__value--out {
+  color: #f5465d;
+}
+
+.btn--sort {
+  outline: none;
+  margin-left: auto;
+  border: none;
+  background: none;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* OPERATIONS */
+.operation {
+  border-radius: 10px;
+  padding: 20px 30px;
+  color: #333;
+}
+
+.operation--transfer {
+  background-image: linear-gradient(to top left, #ffb003, #ffcb03);
+}
+
+.operation--loan {
+  background-image: linear-gradient(to top left, #39b385, #9be15d);
+}
+
+.operation--close {
+  background-image: linear-gradient(to top left, #e52a5a, #ff585f);
+}
+
+h2 {
+  margin-bottom: 10px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 2.5fr 2.5fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 0.4rem 1rem;
+}
+
+.form .form__input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.4);
+  font-family: inherit;
+  font-size: 16px;
+  text-align: center;
+  color: #333;
+  padding: 5px 10px;
+  border-radius: 10px;
+  transition: all 250ms;
+}
+
+.form .form__input:focus {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.form__label {
+  text-align: center;
+}
+
+.form__label--loan {
+  grid-row: 2;
+}
+
+.form__btn {
+  border: none;
+  border-radius: 10px;
+  font-size: 25px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.form__btn:focus {
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.form--loan {
+  grid-template-columns: 2.5fr 1fr 2.5fr;
+}
+
+.timer {
+  margin-top: 10px;
+  text-align: right;
+}
