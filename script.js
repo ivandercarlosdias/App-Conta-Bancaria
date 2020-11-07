@@ -37,7 +37,7 @@ const accounts = [account1, account2, account3, account4];
 // Elements
 const labelWelcome = document.querySelector(".welcome");
 const labelDate = document.querySelector(".date");
-const labelBalance = document.querySelector(".balance__value");
+const labelSaldo = document.querySelector(".saldo__valor");
 const labelSumIn = document.querySelector(".summary__value--in");
 const labelSumOut = document.querySelector(".summary__value--out");
 const labelSumInterest = document.querySelector(".summary__value--interest");
@@ -62,7 +62,11 @@ const inputClosePin = document.querySelector(".form__input--pin");
 
 /////////////////////////////////////////////////
 
+// TODO: Fazer fn que cria username para os usuarios
+
+// Mostra a movimentação da conta
 const displayMovimentos = function (movimentos) {
+    containerMovimentos.innerHTML = "";
     movimentos.forEach(function (value, i) {
         const tipo = value > 0 ? "deposito" : "saque";
         const movimentoItemHTML = `
@@ -75,5 +79,14 @@ const displayMovimentos = function (movimentos) {
         containerMovimentos.insertAdjacentHTML("afterbegin", movimentoItemHTML);
     });
 };
-
 displayMovimentos(account1.movimentos);
+
+// Calcula e exibe o saldo da conta
+const calcDisplaySaldo = function (movimentos) {
+    const saldo = movimentos.reduce(function (total, value, i, arr) {
+        return total + value;
+    }, 0);
+    labelSaldo.textContent = `R$ ${saldo}`;
+};
+calcDisplaySaldo(account1.movimentos);
+
