@@ -64,13 +64,15 @@ nav {
 
 .app {
     position: relative;
-    max-width: 100%;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: 4fr 3fr;
     grid-template-rows: auto repeat(3, 140px) auto;
     gap: 20px;
-    opacity: 1;
-    transition: all 1s;
+    opacity: 0;
+    transition: all 2s;
 }
 
 .saldo {
@@ -206,6 +208,7 @@ h2 {
         }    
     }
     &__label {
+        font-size: 14px;
         text-align: center;
         &--loan {
             grid-row: 2;
