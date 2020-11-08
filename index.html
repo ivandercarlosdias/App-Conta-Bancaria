@@ -54,38 +54,38 @@
             <p class="sumario__valor sumario__valor--saida">R$ 0000</p>
             <p class="sumario__label">Juros</p>
             <p class="sumario__valor sumario__valor--juros">R$ 0000</p>
-            <button class="btn--sort">&downarrow; Ordenar</button>
+            <button class="btn--ordenar">&downarrow; Ordenar</button>
         </div>
 
         <!-- Operações: TRANSFERENCIA -->
-        <div class="operation operation--transfer">
+        <div class="operacao operacao--transferencia">
             <h2>Transferência de dinheiro</h2>
-            <form class="form form--transfer">
-                <input type="text" class="form__input form__input--to" />
-                <input type="number" class="form__input form__input--amount" />
-                <button class="form__btn form__btn--transfer">&rarr;</button>
+            <form class="form form--transferencia">
+                <input type="text" class="form__input form__input--transferencia" />
+                <input type="number" class="form__input form__input--transferencia-valor" />
+                <button class="form__btn form__btn--transferencia">&rarr;</button>
                 <label class="form__label">Transferir para</label>
                 <label class="form__label">Valor</label>
             </form>
         </div>
 
         <!-- Operações: EMPRESTIMO -->
-        <div class="operation operation--loan">
+        <div class="operacao operacao--emprestimo">
             <h2>Pedir empréstimo</h2>
-            <form class="form form--loan">
-                <input type="number" class="form__input form__input--loan-amount" />
-                <button class="form__btn form__btn--loan">&rarr;</button>
-                <label class="form__label form__label--loan">Valor</label>
+            <form class="form form--emprestimo">
+                <input type="number" class="form__input form__input--emprestimo-valor" />
+                <button class="form__btn form__btn--emprestimo">&rarr;</button>
+                <label class="form__label form__label--emprestimo">Valor</label>
             </form>
         </div>
 
         <!-- Operações: ENCERRAMENTO -->
-        <div class="operation operation--close">
+        <div class="operacao operacao--encerrar">
             <h2>Encerrar conta</h2>
-            <form class="form form--close">
-                <input type="text" class="form__input form__input--user" />
-                <input type="password" maxlength="6" class="form__input form__input--pin" />
-                <button class="form__btn form__btn--close">&rarr;</button>
+            <form class="form form--encerrar">
+                <input type="text" class="form__input form__input--encerrar-usuario" />
+                <input type="password" maxlength="6" class="form__input form__input--encerrar-pin" />
+                <button class="form__btn form__btn--encerrar">&rarr;</button>
                 <label class="form__label">Usuário</label>
                 <label class="form__label">Confirmar PIN</label>
             </form>

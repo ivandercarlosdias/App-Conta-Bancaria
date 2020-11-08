@@ -15,7 +15,7 @@ body {
 nav {
     display: grid;
     align-items: center;
-    grid-template-columns: 3fr 2fr 3fr;
+    grid-template-columns: 2.5fr 1fr 2.5fr;
 }
 
 .welcome {
@@ -157,7 +157,7 @@ nav {
     }
 }
 
-.btn--sort {
+.btn--ordenar {
     outline: none;
     margin-left: auto;
     border: none;
@@ -166,17 +166,17 @@ nav {
     cursor: pointer;
 }
 
-.operation {
+.operacao {
     border-radius: 10px;
     padding: 20px 30px;
     color: #333;
-    &--transfer {
+    &--transferencia {
         background-image: linear-gradient(to top left, #ffb003, #ffcb03);
     }
-    &--loan {
+    &--emprestimo {
         background-image: linear-gradient(to top left, #39b385, #9be15d);
     }
-    &--close {
+    &--encerrar {
         background-image: linear-gradient(to top left, #e52a5a, #ff585f);
     }
 }
@@ -212,7 +212,7 @@ h2 {
     &__label {
         font-size: 14px;
         text-align: center;
-        &--loan {
+        &--emprestimo {
             grid-row: 2;
         }
     }
@@ -228,7 +228,7 @@ h2 {
             background-color: rgba(255, 255, 255, .8);
         }
     }
-    &--loan {
+    &--emprestimo {
         grid-template-columns: 2.5fr 1fr 2.5fr;
     }
 }

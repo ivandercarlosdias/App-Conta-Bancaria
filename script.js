@@ -59,18 +59,18 @@ const containerApp = document.querySelector(".app");
 const containerMovimentos = document.querySelector(".movimentos");
 
 const btnLogin = document.querySelector(".login__btn");
-const btnTransfer = document.querySelector(".form__btn--transfer");
-const btnLoan = document.querySelector(".form__btn--loan");
-const btnClose = document.querySelector(".form__btn--close");
-const btnSort = document.querySelector(".btn--sort");
+const btnTransferencia = document.querySelector(".form__btn--transferencia");
+const btnEmprestimo = document.querySelector(".form__btn--emprestimo");
+const btnEncerra = document.querySelector(".form__btn--encerra");
+const btnOrdenar = document.querySelector(".btn--ordenar");
 
 const inputLoginUsuario = document.querySelector(".login__input--usuario");
 const inputLoginPin = document.querySelector(".login__input--pin");
-const inputTransferTo = document.querySelector(".form__input--to");
-const inputTransferAmount = document.querySelector(".form__input--amount");
-const inputLoanAmount = document.querySelector(".form__input--loan-amount");
-const inputCloseUsername = document.querySelector(".form__input--user");
-const inputClosePin = document.querySelector(".form__input--pin");
+const inputTransferencia = document.querySelector(".form__input--transferencia");
+const inputTransferenciaValor = document.querySelector(".form__input--transferencia-valor");
+const inputEmprestimoValor = document.querySelector(".form__input--emprestimo-valor");
+const inputEncerrarUsuario = document.querySelector(".form__input--encerrar-usuario");
+const inputEncerrarPin = document.querySelector(".form__input--encerrar-pin");
 
 /////////////////////////////////////////////////
 // Variáveis globais utilizadas
@@ -83,7 +83,6 @@ btnLogin.addEventListener("click", function (e) {
 
     // verifica input usuario
     usuarioAtivo = contas.find(conta => conta.usuario === inputLoginUsuario.value);
-    console.log(usuarioAtivo);
     
     // verifica input pin
     if (usuarioAtivo?.pin === Number(inputLoginPin.value)) {
@@ -143,3 +142,21 @@ const calcDisplaySumario = function (conta) {
     const juros = conta.movimentos.filter(entrada => entrada > 0).map(entrada => (entrada * conta.taxaJuros) / 100).filter(entrada => entrada >= 1).reduce((total, entrada) => total + entrada, 0);
     labelJuros.textContent = `R$ ${juros}`; 
 };
+
+// Transferir para outra conta
+btnTransferencia.addEventListener("click", function (e) {
+    e.preventDefault();
+    console.log(e);
+});
+
+// Empréstimo
+btnEmprestimo.addEventListener("click", function (e) {
+    e.preventDefault();
+    console.log(e);
+});
+
+// Encerrar conta
+btnEncerra.addEventListener("click", function (e) {
+    e.preventDefault();
+    console.log(e);
+});
