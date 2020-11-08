@@ -190,11 +190,11 @@ nav {
   color: #333;
 }
 
-.operacao--transferencia {
+.operacao--transferir {
   background-image: linear-gradient(to top left, #ffb003, #ffcb03);
 }
 
-.operacao--emprestimo {
+.operacao--emprestar {
   background-image: linear-gradient(to top left, #39b385, #9be15d);
 }
 
@@ -239,7 +239,7 @@ h2 {
   text-align: center;
 }
 
-.form__label--emprestimo {
+.form__label--emprestar {
   grid-row: 2;
 }
 
@@ -257,7 +257,7 @@ h2 {
   background-color: rgba(255, 255, 255, 0.8);
 }
 
-.form--emprestimo {
+.form--emprestar {
   grid-template-columns: 2.5fr 1fr 2.5fr;
 }
 

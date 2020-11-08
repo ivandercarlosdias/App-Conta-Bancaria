@@ -24,7 +24,6 @@ const conta3 = {
     nome: "Steven Thomas Williams",
     movimentos: [200, -200, 340, -300, -20, 50, 400, -460],
     taxaJuros: 0.7,
-    usuario: "steven",
     pin: 3333,
 };
 
@@ -32,7 +31,6 @@ const conta4 = {
     nome: "Sarah Smith",
     movimentos: [430, 1000, 700, 50, 90],
     taxaJuros: 1,
-    usuario: "sarah",
     pin: 4444,
 };
 
@@ -40,11 +38,17 @@ const conta5 = {
     nome: "Ivander Dias",
     movimentos: [10, 20, 500, -50, 35],
     taxaJuros: 1,
-    usuario: "ivander",
     pin: 5555,
 };
 
-const contas = [conta1, conta2, conta3, conta4, conta5];
+const conta6 = {
+    nome: "Giovanna Bueno",
+    movimentos: [1, 1.50, -50, -100, -300],
+    taxaJuros: 1.2,
+    pin: 6666,
+};
+
+const contas = [conta1, conta2, conta3, conta4, conta5, conta6];
 
 // Elementos DOM
 const labelWelcome = document.querySelector(".welcome");
@@ -59,22 +63,40 @@ const containerApp = document.querySelector(".app");
 const containerMovimentos = document.querySelector(".movimentos");
 
 const btnLogin = document.querySelector(".login__btn");
-const btnTransferencia = document.querySelector(".form__btn--transferencia");
-const btnEmprestimo = document.querySelector(".form__btn--emprestimo");
-const btnEncerra = document.querySelector(".form__btn--encerra");
+const btnTransferir = document.querySelector(".form__btn--transferir");
+const btnEmprestar = document.querySelector(".form__btn--emprestar");
+const btnEncerrar = document.querySelector(".form__btn--encerrar");
 const btnOrdenar = document.querySelector(".btn--ordenar");
 
 const inputLoginUsuario = document.querySelector(".login__input--usuario");
 const inputLoginPin = document.querySelector(".login__input--pin");
-const inputTransferencia = document.querySelector(".form__input--transferencia");
-const inputTransferenciaValor = document.querySelector(".form__input--transferencia-valor");
-const inputEmprestimoValor = document.querySelector(".form__input--emprestimo-valor");
+const inputTransferirUsuario = document.querySelector(".form__input--transferir-usuario");
+const inputTransferirValor = document.querySelector(".form__input--transferir-valor");
+const inputEmprestarValor = document.querySelector(".form__input--emprestar-valor");
 const inputEncerrarUsuario = document.querySelector(".form__input--encerrar-usuario");
 const inputEncerrarPin = document.querySelector(".form__input--encerrar-pin");
 
 /////////////////////////////////////////////////
 // Variáveis globais utilizadas
-let usuarioAtivo;
+let contaAtiva;
+
+const updateUI = function (conta) {
+    // exibe movimentação
+    displayMovimentos(conta.movimentos); 
+    // exibe saldo
+    calcDisplaySaldo(conta);
+    // exibe sumário
+    calcDisplaySumario(conta); 
+}
+
+// Define um usuário para cada contas
+const defineUsuario = function (contas) {
+    contas.forEach(function (conta) {
+        conta.usuario = conta.nome.toLowerCase().split(" ")[0];
+    });
+    console.log(contas);
+};
+defineUsuario(contas);
 
 // Login
 btnLogin.addEventListener("click", function (e) {
@@ -82,24 +104,20 @@ btnLogin.addEventListener("click", function (e) {
     e.preventDefault();
 
     // verifica input usuario
-    usuarioAtivo = contas.find(conta => conta.usuario === inputLoginUsuario.value);
+    contaAtiva = contas.find(conta => conta.usuario === inputLoginUsuario.value);
     
     // verifica input pin
-    if (usuarioAtivo?.pin === Number(inputLoginPin.value)) {
+    if (contaAtiva?.pin === Number(inputLoginPin.value)) {
         // mensagem boas vindas
-        labelWelcome.textContent = `Seja bem-vindo, ${usuarioAtivo.nome.split(" ")[0]}!`;
+        labelWelcome.textContent = `Seja bem-vindo, ${contaAtiva.nome.split(" ")[0]}!`;
         // limpa os inputs
         inputLoginUsuario.value = inputLoginPin.value = "";
         inputLoginUsuario.blur();
         inputLoginPin.blur();
         // exibe conteúdo app
         containerApp.style.opacity = 1;
-        // exibe movimentação
-        displayMovimentos(usuarioAtivo.movimentos); 
-        // exibe saldo
-        calcDisplaySaldo(usuarioAtivo.movimentos);
-        // exibe sumário
-        calcDisplaySumario(usuarioAtivo); 
+        // atualiza UI
+        updateUI(contaAtiva);
     }
 });
 
@@ -123,9 +141,9 @@ const displayMovimentos = function (movimentos) {
 };
 
 // Calcula e exibe o saldo da conta
-const calcDisplaySaldo = function (movimentos) {
-    const saldo = movimentos.reduce((total, item) => total + item, 0);
-    labelSaldo.textContent = `R$ ${saldo}`;
+const calcDisplaySaldo = function (conta) {
+    conta.saldo = conta.movimentos.reduce((total, item) => total + item, 0);
+    labelSaldo.textContent = `R$ ${conta.saldo}`;
 };
 
 // Calcula e exige as estatiscas da conta
@@ -144,19 +162,34 @@ const calcDisplaySumario = function (conta) {
 };
 
 // Transferir para outra conta
-btnTransferencia.addEventListener("click", function (e) {
+btnTransferir.addEventListener("click", function (e) {
     e.preventDefault();
-    console.log(e);
+    // recebe informações dos inputs
+    const valor = Number(inputTransferirValor.value);
+    const receberTransferencia = contas.find(conta => conta.usuario === inputTransferirUsuario.value);
+    // verifica se será possivel transferir
+    if (valor > 0 && valor <= contaAtiva.saldo && receberTransferencia && receberTransferencia !== contaAtiva) {
+        console.log("Transferência aceita!");
+        // debita e credita os valores nas contas
+        receberTransferencia.movimentos.push(valor);
+        contaAtiva.movimentos.push(-valor);
+        // atualiza UI
+        updateUI(contaAtiva);
+    }
+    // limpa os inputs
+    inputTransferirUsuario.value = inputTransferirValor.value = "";
+    inputTransferirUsuario.blur();
+    inputTransferirValor.blur();
 });
 
 // Empréstimo
-btnEmprestimo.addEventListener("click", function (e) {
+btnEmprestar.addEventListener("click", function (e) {
     e.preventDefault();
     console.log(e);
 });
 
-// Encerrar conta
-btnEncerra.addEventListener("click", function (e) {
+// encerramento conta
+btnEncerrar.addEventListener("click", function (e) {
     e.preventDefault();
     console.log(e);
 });
