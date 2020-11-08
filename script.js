@@ -36,7 +36,15 @@ const conta4 = {
     pin: 4444,
 };
 
-const contas = [conta1, conta2, conta3, conta4];
+const conta5 = {
+    nome: "Ivander Dias",
+    movimentos: [10, 20, 500, -50, 35],
+    taxaJuros: 1,
+    usuario: "ivander",
+    pin: 5555,
+};
+
+const contas = [conta1, conta2, conta3, conta4, conta5];
 
 // Elementos DOM
 const labelWelcome = document.querySelector(".welcome");
@@ -70,21 +78,37 @@ let usuarioAtivo;
 
 // Login
 btnLogin.addEventListener("click", function (e) {
-    e.preventDefault(); // não deixa realizar o submit no form
+    // não deixa realizar o submit no form
+    e.preventDefault();
+
+    // verifica input usuario
     usuarioAtivo = contas.find(conta => conta.usuario === inputLoginUsuario.value);
     console.log(usuarioAtivo);
+    
+    // verifica input pin
     if (usuarioAtivo?.pin === Number(inputLoginPin.value)) {
-        labelWelcome.textContent = `Seja bem-vindo, ${usuarioAtivo.nome.split(" ")[0]}!`; // exibe mensagem boas vindas
-        containerApp.style.opacity = 100; // exibe app
+        // mensagem boas vindas
+        labelWelcome.textContent = `Seja bem-vindo, ${usuarioAtivo.nome.split(" ")[0]}!`;
+        // limpa os inputs
+        inputLoginUsuario.value = inputLoginPin.value = "";
+        inputLoginUsuario.blur();
+        inputLoginPin.blur();
+        // exibe conteúdo app
+        containerApp.style.opacity = 1;
         // exibe movimentação
-        // exibe balanço
+        displayMovimentos(usuarioAtivo.movimentos); 
+        // exibe saldo
+        calcDisplaySaldo(usuarioAtivo.movimentos);
         // exibe sumário
+        calcDisplaySumario(usuarioAtivo); 
     }
 });
 
 // Mostra a movimentação da conta
 const displayMovimentos = function (movimentos) {
+    // zera todo conteudo dos movimentos
     containerMovimentos.innerHTML = "";
+    // cria uma nova linha para cada movimento existente
     movimentos.forEach((value, i) => {
         const tipo = value > 0 ? "entrada" : "saida";
         const movimentoItemHTML = `
@@ -94,27 +118,28 @@ const displayMovimentos = function (movimentos) {
                 <div class="movimentos__valor">${value}</div>
             </div>
         `;
+        // insere a nova linha no HTML
         containerMovimentos.insertAdjacentHTML("afterbegin", movimentoItemHTML);
     });
 };
-displayMovimentos(conta1.movimentos);
 
 // Calcula e exibe o saldo da conta
 const calcDisplaySaldo = function (movimentos) {
     const saldo = movimentos.reduce((total, item) => total + item, 0);
     labelSaldo.textContent = `R$ ${saldo}`;
 };
-calcDisplaySaldo(conta1.movimentos);
 
 // Calcula e exige as estatiscas da conta
-const calcDisplaySumario = function (movimentos) {
-    const entrada = movimentos.filter(movimento => movimento > 0).reduce((total, movimento) => total + movimento, 0);
-    labelEntrada.textContent = `R$ ${entrada}`; // exibe soma depósitos
+const calcDisplaySumario = function (conta) {
+    // exibe soma depósitos
+    const entrada = conta.movimentos.filter(movimento => movimento > 0).reduce((total, movimento) => total + movimento, 0);
+    labelEntrada.textContent = `R$ ${entrada}`; 
 
-    const saida = movimentos.filter(movimento => movimento < 0).reduce((total, movimento) => total + movimento, 0);
-    labelSaida.textContent = `R$ ${Math.abs(saida)}`; // exibe soma saques
+    // exibe soma saques
+    const saida = conta.movimentos.filter(movimento => movimento < 0).reduce((total, movimento) => total + movimento, 0);
+    labelSaida.textContent = `R$ ${Math.abs(saida)}`; 
 
-    const juros = movimentos.filter(entrada => entrada > 0).map(entrada => (entrada * 1.2) / 100).filter(entrada => entrada >= 1).reduce((total, entrada) => total + entrada, 0);
-    labelJuros.textContent = `R$ ${juros}`; // exibe juros que ganhou com os depósitos
+    // exibe juros que ganhou com os depósitos
+    const juros = conta.movimentos.filter(entrada => entrada > 0).map(entrada => (entrada * conta.taxaJuros) / 100).filter(entrada => entrada >= 1).reduce((total, entrada) => total + entrada, 0);
+    labelJuros.textContent = `R$ ${juros}`; 
 };
-calcDisplaySumario(conta1.movimentos);

@@ -14,9 +14,9 @@ body {
 }
 
 nav {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
   align-items: center;
+  grid-template-columns: 3fr 2fr 3fr;
 }
 
 .welcome {
@@ -25,13 +25,15 @@ nav {
 }
 
 .logo {
+  display: block;
+  margin: auto;
   width: 100%;
   height: auto;
   max-width: 80px;
 }
 
 .login {
-  display: flex;
+  text-align: right;
 }
 
 .login__input {
