@@ -80,7 +80,7 @@ const inputEncerrarPin = document.querySelector(".form__input--encerrar-pin");
 // Variáveis globais utilizadas
 let contaAtiva;
 
-const updateUI = function (conta) {
+const atualizaUI = function(conta) {
     // exibe movimentação
     displayMovimentos(conta.movimentos); 
     // exibe saldo
@@ -90,22 +90,19 @@ const updateUI = function (conta) {
 }
 
 // Define um usuário para cada contas
-const defineUsuario = function (contas) {
-    contas.forEach(function (conta) {
+const defineUsuario = function(contas) {
+    contas.forEach(function(conta) {
         conta.usuario = conta.nome.toLowerCase().split(" ")[0];
     });
-    console.log(contas);
 };
 defineUsuario(contas);
 
 // Login
-btnLogin.addEventListener("click", function (e) {
+btnLogin.addEventListener("click", function(e) {
     // não deixa realizar o submit no form
     e.preventDefault();
-
     // verifica input usuario
     contaAtiva = contas.find(conta => conta.usuario === inputLoginUsuario.value);
-    
     // verifica input pin
     if (contaAtiva?.pin === Number(inputLoginPin.value)) {
         // mensagem boas vindas
@@ -117,12 +114,12 @@ btnLogin.addEventListener("click", function (e) {
         // exibe conteúdo app
         containerApp.style.opacity = 1;
         // atualiza UI
-        updateUI(contaAtiva);
+        atualizaUI(contaAtiva);
     }
 });
 
 // Mostra a movimentação da conta
-const displayMovimentos = function (movimentos) {
+const displayMovimentos = function(movimentos) {
     // zera todo conteudo dos movimentos
     containerMovimentos.innerHTML = "";
     // cria uma nova linha para cada movimento existente
@@ -141,40 +138,37 @@ const displayMovimentos = function (movimentos) {
 };
 
 // Calcula e exibe o saldo da conta
-const calcDisplaySaldo = function (conta) {
+const calcDisplaySaldo = function(conta) {
     conta.saldo = conta.movimentos.reduce((total, item) => total + item, 0);
     labelSaldo.textContent = `R$ ${conta.saldo}`;
 };
 
 // Calcula e exige as estatiscas da conta
-const calcDisplaySumario = function (conta) {
+const calcDisplaySumario = function(conta) {
     // exibe soma depósitos
     const entrada = conta.movimentos.filter(movimento => movimento > 0).reduce((total, movimento) => total + movimento, 0);
     labelEntrada.textContent = `R$ ${entrada}`; 
-
     // exibe soma saques
     const saida = conta.movimentos.filter(movimento => movimento < 0).reduce((total, movimento) => total + movimento, 0);
     labelSaida.textContent = `R$ ${Math.abs(saida)}`; 
-
     // exibe juros que ganhou com os depósitos
     const juros = conta.movimentos.filter(entrada => entrada > 0).map(entrada => (entrada * conta.taxaJuros) / 100).filter(entrada => entrada >= 1).reduce((total, entrada) => total + entrada, 0);
     labelJuros.textContent = `R$ ${juros}`; 
 };
 
 // Transferir para outra conta
-btnTransferir.addEventListener("click", function (e) {
+btnTransferir.addEventListener("click", function(e) {
     e.preventDefault();
     // recebe informações dos inputs
     const valor = Number(inputTransferirValor.value);
     const receberTransferencia = contas.find(conta => conta.usuario === inputTransferirUsuario.value);
     // verifica se será possivel transferir
     if (valor > 0 && valor <= contaAtiva.saldo && receberTransferencia && receberTransferencia !== contaAtiva) {
-        console.log("Transferência aceita!");
         // debita e credita os valores nas contas
         receberTransferencia.movimentos.push(valor);
         contaAtiva.movimentos.push(-valor);
         // atualiza UI
-        updateUI(contaAtiva);
+        atualizaUI(contaAtiva);
     }
     // limpa os inputs
     inputTransferirUsuario.value = inputTransferirValor.value = "";
@@ -183,13 +177,24 @@ btnTransferir.addEventListener("click", function (e) {
 });
 
 // Empréstimo
-btnEmprestar.addEventListener("click", function (e) {
+btnEmprestar.addEventListener("click", function(e) {
     e.preventDefault();
-    console.log(e);
 });
 
-// encerramento conta
-btnEncerrar.addEventListener("click", function (e) {
+// Encerrar conta
+btnEncerrar.addEventListener("click", function(e) {
     e.preventDefault();
-    console.log(e);
+    // verifica se a conta a excluir é a mesma da conta que esta ativa/logada
+    if (contaAtiva.usuario === inputEncerrarUsuario.value && contaAtiva.pin === Number(inputEncerrarPin.value)) {
+        console.log("Conta excluída!");
+        // encontra o index da conta no array contas e depois exclui
+        const apagar = contas.findIndex(conta => conta.usuario === contaAtiva.usuario);
+        contas.splice(apagar, 1);
+        // oculta conteúdo app
+        containerApp.style.opacity = 0;
+        // limpa os inputs
+        inputEncerrarUsuario.value = inputEncerrarPin.value = "";
+        inputEncerrarUsuario.blur();
+        inputEncerrarPin.blur();
+    }
 });
