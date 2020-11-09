@@ -7,7 +7,7 @@
 const conta1 = {
     nome: "Jonas Schmedtmann",
     movimentos: [200, 450, -400, 3000, -650, -130, 70, 1300],
-    taxaJuros: 1.2, // %
+    rendimento: 1.2, // %
     usuario: "jonas",
     pin: 1111,
 };
@@ -15,7 +15,7 @@ const conta1 = {
 const conta2 = {
     nome: "Jessica Davis",
     movimentos: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
-    taxaJuros: 1.5,
+    rendimento: 1.5,
     usuario: "jessica",
     pin: 2222,
 };
@@ -23,28 +23,28 @@ const conta2 = {
 const conta3 = {
     nome: "Steven Thomas Williams",
     movimentos: [200, -200, 340, -300, -20, 50, 400, -460],
-    taxaJuros: 0.7,
+    rendimento: 0.7,
     pin: 3333,
 };
 
 const conta4 = {
     nome: "Sarah Smith",
     movimentos: [430, 1000, 700, 50, 90],
-    taxaJuros: 1,
+    rendimento: 1,
     pin: 4444,
 };
 
 const conta5 = {
     nome: "Ivander Dias",
     movimentos: [10, 20, 500, -50, 35],
-    taxaJuros: 1,
+    rendimento: 1,
     pin: 5555,
 };
 
 const conta6 = {
     nome: "Giovanna Bueno",
     movimentos: [1, 1.50, -50, -100, -300],
-    taxaJuros: 1.2,
+    rendimento: 1.2,
     pin: 6666,
 };
 
@@ -56,7 +56,7 @@ const labelDate = document.querySelector(".date");
 const labelSaldo = document.querySelector(".saldo__valor");
 const labelEntrada = document.querySelector(".sumario__valor--entrada");
 const labelSaida = document.querySelector(".sumario__valor--saida");
-const labelJuros = document.querySelector(".sumario__valor--juros");
+const labelRendimento = document.querySelector(".sumario__valor--rendimento");
 const labelTimer = document.querySelector(".timer__clock");
 
 const containerApp = document.querySelector(".app");
@@ -91,9 +91,7 @@ const atualizaUI = function(conta) {
 
 // Define um usuário para cada contas
 const defineUsuario = function(contas) {
-    contas.forEach(function(conta) {
-        conta.usuario = conta.nome.toLowerCase().split(" ")[0];
-    });
+    contas.forEach(conta => conta.usuario = conta.nome.toLowerCase().split(" ")[0]);
 };
 defineUsuario(contas);
 
@@ -119,16 +117,19 @@ btnLogin.addEventListener("click", function(e) {
 });
 
 // Mostra a movimentação da conta
-const displayMovimentos = function(movimentos) {
+const displayMovimentos = function(movimentos, ordem = false) {
     // zera todo conteudo dos movimentos
     containerMovimentos.innerHTML = "";
+
+    // exibir na ordem desejada
+    const movs = ordem ? movimentos.slice().sort((a, b) => a - b) : movimentos;
+
     // cria uma nova linha para cada movimento existente
-    movimentos.forEach((value, i) => {
+    movs.forEach((value, i) => {
         const tipo = value > 0 ? "entrada" : "saida";
         const movimentoItemHTML = `
             <div class="movimentos__item">
-                <div class="movimentos__tipo movimentos__tipo--${tipo}">${i + 1}: ${tipo}</div>
-                <div class="movimentos__data">3 dias atrás</div>
+                <div class="movimentos__tipo movimentos__tipo--${tipo}">${i + 1}.: ${tipo}</div>
                 <div class="movimentos__valor">${value}</div>
             </div>
         `;
@@ -151,9 +152,9 @@ const calcDisplaySumario = function(conta) {
     // exibe soma saques
     const saida = conta.movimentos.filter(movimento => movimento < 0).reduce((total, movimento) => total + movimento, 0);
     labelSaida.textContent = `R$ ${Math.abs(saida)}`; 
-    // exibe juros que ganhou com os depósitos
-    const juros = conta.movimentos.filter(entrada => entrada > 0).map(entrada => (entrada * conta.taxaJuros) / 100).filter(entrada => entrada >= 1).reduce((total, entrada) => total + entrada, 0);
-    labelJuros.textContent = `R$ ${juros}`; 
+    // exibe rendimento que a conta irá ganhar com os depósitos
+    const rendimento = conta.movimentos.filter(entrada => entrada > 0).map(entrada => (entrada * conta.rendimento) / 100).filter(entrada => entrada >= 1).reduce((total, entrada) => total + entrada, 0);
+    labelRendimento.textContent = `R$ ${rendimento}`; 
 };
 
 // Transferir para outra conta
@@ -172,13 +173,18 @@ btnTransferir.addEventListener("click", function(e) {
     }
     // limpa os inputs
     inputTransferirUsuario.value = inputTransferirValor.value = "";
-    inputTransferirUsuario.blur();
-    inputTransferirValor.blur();
 });
 
 // Empréstimo
 btnEmprestar.addEventListener("click", function(e) {
     e.preventDefault();
+    const valor = Number(inputEmprestarValor.value);
+    if (valor < contaAtiva.saldo * 0.1) {
+        contaAtiva.movimentos.push(valor);
+        atualizaUI(contaAtiva);
+    }
+    // limpa os inputs
+    inputEmprestarValor.value = "";
 });
 
 // Encerrar conta
@@ -186,7 +192,6 @@ btnEncerrar.addEventListener("click", function(e) {
     e.preventDefault();
     // verifica se a conta a excluir é a mesma da conta que esta ativa/logada
     if (contaAtiva.usuario === inputEncerrarUsuario.value && contaAtiva.pin === Number(inputEncerrarPin.value)) {
-        console.log("Conta excluída!");
         // encontra o index da conta no array contas e depois exclui
         const apagar = contas.findIndex(conta => conta.usuario === contaAtiva.usuario);
         contas.splice(apagar, 1);
@@ -194,7 +199,13 @@ btnEncerrar.addEventListener("click", function(e) {
         containerApp.style.opacity = 0;
         // limpa os inputs
         inputEncerrarUsuario.value = inputEncerrarPin.value = "";
-        inputEncerrarUsuario.blur();
-        inputEncerrarPin.blur();
     }
+});
+
+let ordem = false;
+// Ordenar os movimentos
+btnOrdenar.addEventListener("click", function(e) {
+    e.preventDefault();
+    displayMovimentos(contaAtiva.movimentos, !ordem)
+    ordem = !ordem;
 });
