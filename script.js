@@ -4,7 +4,7 @@
 // BANKIST APP
 
 // Dados das contas
-const conta1 = {
+const c1 = {
     nome: "Jonas Schmedtmann",
     movimentos: [200, 450, -400, 3000, -650, -130, 70, 1300],
     rendimento: 1.2, // %
@@ -12,7 +12,7 @@ const conta1 = {
     pin: 1111,
 };
 
-const conta2 = {
+const c2 = {
     nome: "Jessica Davis",
     movimentos: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
     rendimento: 1.5,
@@ -20,35 +20,35 @@ const conta2 = {
     pin: 2222,
 };
 
-const conta3 = {
+const c3 = {
     nome: "Steven Thomas Williams",
     movimentos: [200, -200, 340, -300, -20, 50, 400, -460],
     rendimento: 0.7,
     pin: 3333,
 };
 
-const conta4 = {
+const c4 = {
     nome: "Sarah Smith",
     movimentos: [430, 1000, 700, 50, 90],
     rendimento: 1,
     pin: 4444,
 };
 
-const conta5 = {
+const c5 = {
     nome: "Ivander Dias",
     movimentos: [10, 20, 500, -50, 35],
     rendimento: 1,
     pin: 5555,
 };
 
-const conta6 = {
+const c6 = {
     nome: "Giovanna Bueno",
     movimentos: [1, 1.50, -50, -100, -300],
     rendimento: 1.2,
     pin: 6666,
 };
 
-const contas = [conta1, conta2, conta3, conta4, conta5, conta6];
+const contas = [c1, c2, c3, c4, c5, c6];
 
 // Elementos DOM
 const labelWelcome = document.querySelector(".welcome");
@@ -80,18 +80,18 @@ const inputEncerrarPin = document.querySelector(".form__input--encerrar-pin");
 // Variáveis globais utilizadas
 let contaAtiva;
 
-const atualizaUI = function(conta) {
+const atualizaUI = function(arr) {
     // exibe movimentação
-    displayMovimentos(conta.movimentos); 
+    displayMovimentos(arr.movimentos); 
     // exibe saldo
-    calcDisplaySaldo(conta);
+    calcDisplaySaldo(arr);
     // exibe sumário
-    calcDisplaySumario(conta); 
+    calcDisplaySumario(arr); 
 }
 
 // Define um usuário para cada contas
-const defineUsuario = function(contas) {
-    contas.forEach(conta => conta.usuario = conta.nome.toLowerCase().split(" ")[0]);
+const defineUsuario = function(arr) {
+    arr.forEach(conta => conta.usuario = conta.nome.toLowerCase().split(" ")[0]);
 };
 defineUsuario(contas);
 
@@ -125,12 +125,12 @@ const displayMovimentos = function(movimentos, ordem = false) {
     const movs = ordem ? movimentos.slice().sort((a, b) => a - b) : movimentos;
 
     // cria uma nova linha para cada movimento existente
-    movs.forEach((value, i) => {
-        const tipo = value > 0 ? "entrada" : "saida";
+    movs.forEach((movimento, i) => {
+        const tipo = movimento > 0 ? "entrada" : "saida";
         const movimentoItemHTML = `
             <div class="movimentos__item">
                 <div class="movimentos__tipo movimentos__tipo--${tipo}">${i + 1}.: ${tipo}</div>
-                <div class="movimentos__valor">${value}</div>
+                <div class="movimentos__valor">${movimento}</div>
             </div>
         `;
         // insere a nova linha no HTML
@@ -179,7 +179,7 @@ btnTransferir.addEventListener("click", function(e) {
 btnEmprestar.addEventListener("click", function(e) {
     e.preventDefault();
     const valor = Number(inputEmprestarValor.value);
-    if (valor < contaAtiva.saldo * 0.1) {
+    if (valor <= contaAtiva.saldo * 0.1) {
         contaAtiva.movimentos.push(valor);
         atualizaUI(contaAtiva);
     }
