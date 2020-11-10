@@ -124,7 +124,7 @@ const displayMovimentos = function(movimentos, ordem = false) {
         const movimentoItemHTML = `
             <div class="movimentos__item">
                 <div class="movimentos__tipo movimentos__tipo--${tipo}">${i + 1}.: ${tipo}</div>
-                <div class="movimentos__valor">${movimento}</div>
+                <div class="movimentos__valor">${movimento.toFixed(2)}</div>
             </div>
         `;
         // insere a nova linha no HTML
@@ -135,20 +135,20 @@ const displayMovimentos = function(movimentos, ordem = false) {
 // Calcula e exibe o saldo da conta
 const calcDisplaySaldo = function(conta) {
     conta.saldo = conta.movimentos.reduce((total, item) => total + item, 0);
-    labelSaldo.textContent = `R$ ${conta.saldo}`;
+    labelSaldo.textContent = `R$ ${conta.saldo.toFixed(2)}`;
 };
 
 // Calcula e exige as estatiscas da conta
 const calcDisplaySumario = function(conta) {
     // exibe soma depósitos
     const entrada = conta.movimentos.filter(movimento => movimento > 0).reduce((total, movimento) => total + movimento, 0);
-    labelEntrada.textContent = `R$ ${entrada}`; 
+    labelEntrada.textContent = `R$ ${entrada.toFixed(2)}`; 
     // exibe soma saques
     const saida = conta.movimentos.filter(movimento => movimento < 0).reduce((total, movimento) => total + movimento, 0);
-    labelSaida.textContent = `R$ ${Math.abs(saida)}`; 
+    labelSaida.textContent = `R$ ${Math.abs(saida.toFixed(2))}`; 
     // exibe rendimento que a conta irá ganhar com os depósitos
     const rendimento = conta.movimentos.filter(entrada => entrada > 0).map(entrada => (entrada * conta.rendimento) / 100).filter(entrada => entrada >= 1).reduce((total, entrada) => total + entrada, 0);
-    labelRendimento.textContent = `R$ ${rendimento}`; 
+    labelRendimento.textContent = `R$ ${rendimento.toFixed(2)}`; 
 };
 
 // Transferir para outra conta
@@ -172,7 +172,7 @@ btnTransferir.addEventListener("click", function(e) {
 // Empréstimo
 btnEmprestar.addEventListener("click", function(e) {
     e.preventDefault();
-    const valor = Number(inputEmprestarValor.value);
+    const valor = Math.floor(inputEmprestarValor.value);
     if (valor <= contaAtiva.saldo * 0.1) {
         contaAtiva.movimentos.push(valor);
         atualizaUI(contaAtiva);
