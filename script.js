@@ -16,8 +16,8 @@ const c1 = {
         '2020-04-01T10:17:24.185Z',
         '2020-05-08T14:11:59.604Z',
         '2020-05-27T17:01:17.194Z',
-        '2020-07-11T23:36:17.929Z',
-        '2020-07-12T10:51:36.790Z',
+        '2020-11-07T23:36:17.929Z',
+        '2020-11-11T10:51:36.790Z',
     ],
     currency: 'R$',
     local: 'pt-BR',
@@ -90,6 +90,21 @@ const defineUsuario = function(arr) {
 };
 defineUsuario(contas);
 
+// Função datas
+const formataData = function(data) {
+    // calcula a diferença entre duas datas
+    const calcDiasPassados = (data1, data2) => Math.round(Math.abs((data2 - data1) / (1000 * 60 * 60 * 24)));
+    const diasPassados = calcDiasPassados(new Date(), data);
+    // exibe data movimentação
+    if (diasPassados === 0) return "Hoje";
+    if (diasPassados === 1) return "Ontem";
+    if (diasPassados <= 7) return `${diasPassados} dias atrás`;
+    const ano = data.getFullYear();
+    const mes = `${data.getMonth() + 1}`.padStart(2, "0");
+    const dia = `${data.getDate()}`.padStart(2, "0");
+    return `${dia}/${mes}/${ano}`;
+} 
+
 // Login
 btnLogin.addEventListener("click", function(e) {
     // não deixa realizar o submit no form
@@ -100,7 +115,6 @@ btnLogin.addEventListener("click", function(e) {
     if (contaAtiva?.pin === Number(inputLoginPin.value)) {
         // mensagem boas vindas
         labelWelcome.textContent = `Seja bem-vindo, ${contaAtiva.nome.split(" ")[0]}!`;
-
         // exibe a data atual
         const dataAtual = new Date();
         const ano = dataAtual.getFullYear();
@@ -109,7 +123,6 @@ btnLogin.addEventListener("click", function(e) {
         const hora = `${dataAtual.getHours()}`.padStart(2, "0");
         const minuto = `${dataAtual.getMinutes()}`.padStart(2, "0");
         labelData.textContent = `${dia}/${mes}/${ano}, ${hora}:${minuto}`;
-
         // limpa os inputs
         inputLoginUsuario.value = inputLoginPin.value = "";
         inputLoginUsuario.blur();
@@ -125,23 +138,18 @@ btnLogin.addEventListener("click", function(e) {
 const displayMovimentos = function(conta, ordem = false) {
     // zera todo conteudo dos movimentos
     containerMovimentos.innerHTML = "";
-
     // exibir na ordem desejada
     const movs = ordem ? conta.movimentos.slice().sort((a, b) => a - b) : conta.movimentos;
-
     // cria uma nova linha para cada movimento existente
     movs.forEach((movimento, i) => {
         const tipo = movimento > 0 ? "entrada" : "saida";
-        // data da movimentação
+        // recebe a data e formata para exibição
         const data = new Date(conta.movimentosDatas[i]);
-        const ano = data.getFullYear();
-        const mes = `${data.getMonth() + 1}`.padStart(2, "0");
-        const dia = `${data.getDate()}`.padStart(2, "0");
-        const dataMovimentacao = `${dia}/${mes}/${ano}`;
+        const dataMovimentacao = formataData(data);
         // cria as rows com os movimentos
         const movimentoItemHTML = `
             <div class="movimentos__item">
-                <div class="movimentos__tipo movimentos__tipo--${tipo}">${i + 1}.: ${tipo}</div>
+                <div class="movimentos__tipo movimentos__tipo--${tipo}">${i + 1}. ${tipo}</div>
                 <div class="movimentos__data">${dataMovimentacao}</div>
                 <div class="movimentos__valor">${movimento.toFixed(2)}</div>
             </div>
