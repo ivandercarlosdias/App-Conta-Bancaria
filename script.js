@@ -5,7 +5,7 @@
 
 // Dados das contas
 const c1 = {
-    nome: 'Jonas Schmedtmann',
+    nome: 'Ivander Carlos Dias',
     movimentos: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
     rendimento: 1.2, // %
     pin: 1111,
@@ -24,7 +24,7 @@ const c1 = {
 };
 
 const c2 = {
-    nome: 'Jessica Davis',
+    nome: 'Giovanna Bueno',
     movimentos: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
     rendimento: 1.5,
     pin: 2222,
@@ -46,7 +46,7 @@ const contas = [c1, c2];
 
 // Elementos DOM
 const labelWelcome = document.querySelector(".welcome");
-const labelDate = document.querySelector(".date");
+const labelData = document.querySelector(".data");
 const labelSaldo = document.querySelector(".saldo__valor");
 const labelEntrada = document.querySelector(".sumario__valor--entrada");
 const labelSaida = document.querySelector(".sumario__valor--saida");
@@ -74,9 +74,10 @@ const inputEncerrarPin = document.querySelector(".form__input--encerrar-pin");
 // Variáveis globais utilizadas
 let contaAtiva;
 
+// Atualiza UI
 const atualizaUI = function(arr) {
     // exibe movimentação
-    displayMovimentos(arr.movimentos); 
+    displayMovimentos(arr); 
     // exibe saldo
     calcDisplaySaldo(arr);
     // exibe sumário
@@ -99,6 +100,16 @@ btnLogin.addEventListener("click", function(e) {
     if (contaAtiva?.pin === Number(inputLoginPin.value)) {
         // mensagem boas vindas
         labelWelcome.textContent = `Seja bem-vindo, ${contaAtiva.nome.split(" ")[0]}!`;
+
+        // exibe a data atual
+        const dataAtual = new Date();
+        const ano = dataAtual.getFullYear();
+        const mes = `${dataAtual.getMonth() + 1}`.padStart(2, "0");
+        const dia = `${dataAtual.getDate()}`.padStart(2, "0");
+        const hora = `${dataAtual.getHours()}`.padStart(2, "0");
+        const minuto = `${dataAtual.getMinutes()}`.padStart(2, "0");
+        labelData.textContent = `${dia}/${mes}/${ano}, ${hora}:${minuto}`;
+
         // limpa os inputs
         inputLoginUsuario.value = inputLoginPin.value = "";
         inputLoginUsuario.blur();
@@ -111,19 +122,27 @@ btnLogin.addEventListener("click", function(e) {
 });
 
 // Mostra a movimentação da conta
-const displayMovimentos = function(movimentos, ordem = false) {
+const displayMovimentos = function(conta, ordem = false) {
     // zera todo conteudo dos movimentos
     containerMovimentos.innerHTML = "";
 
     // exibir na ordem desejada
-    const movs = ordem ? movimentos.slice().sort((a, b) => a - b) : movimentos;
+    const movs = ordem ? conta.movimentos.slice().sort((a, b) => a - b) : conta.movimentos;
 
     // cria uma nova linha para cada movimento existente
     movs.forEach((movimento, i) => {
         const tipo = movimento > 0 ? "entrada" : "saida";
+        // data da movimentação
+        const data = new Date(conta.movimentosDatas[i]);
+        const ano = data.getFullYear();
+        const mes = `${data.getMonth() + 1}`.padStart(2, "0");
+        const dia = `${data.getDate()}`.padStart(2, "0");
+        const dataMovimentacao = `${dia}/${mes}/${ano}`;
+        // cria as rows com os movimentos
         const movimentoItemHTML = `
             <div class="movimentos__item">
                 <div class="movimentos__tipo movimentos__tipo--${tipo}">${i + 1}.: ${tipo}</div>
+                <div class="movimentos__data">${dataMovimentacao}</div>
                 <div class="movimentos__valor">${movimento.toFixed(2)}</div>
             </div>
         `;
@@ -138,7 +157,7 @@ const calcDisplaySaldo = function(conta) {
     labelSaldo.textContent = `R$ ${conta.saldo.toFixed(2)}`;
 };
 
-// Calcula e exige as estatiscas da conta
+// Calcula e exige as estatísticas da conta
 const calcDisplaySumario = function(conta) {
     // exibe soma depósitos
     const entrada = conta.movimentos.filter(movimento => movimento > 0).reduce((total, movimento) => total + movimento, 0);
@@ -160,8 +179,11 @@ btnTransferir.addEventListener("click", function(e) {
     // verifica se será possivel transferir
     if (valor > 0 && valor <= contaAtiva.saldo && receberTransferencia && receberTransferencia !== contaAtiva) {
         // debita e credita os valores nas contas
+        contaAtiva.movimentos.push(-valor);
         receberTransferencia.movimentos.push(valor);
-        console.log(contaAtiva.movimentos.push(-valor));
+        // cria a data da transferencia
+        contaAtiva.movimentosDatas.push(new Date().toISOString());
+        receberTransferencia.movimentosDatas.push(new Date().toISOString());
         // atualiza UI
         atualizaUI(contaAtiva);
     }
@@ -175,6 +197,8 @@ btnEmprestar.addEventListener("click", function(e) {
     const valor = Math.floor(inputEmprestarValor.value);
     if (valor <= contaAtiva.saldo * 0.1) {
         contaAtiva.movimentos.push(valor);
+        contaAtiva.movimentosDatas.push(new Date().toISOString());
+        // cria a data do empréstimo
         atualizaUI(contaAtiva);
     }
     // limpa os inputs
