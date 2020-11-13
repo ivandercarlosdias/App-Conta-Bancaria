@@ -19,8 +19,8 @@ const c1 = {
         '2020-11-07T23:36:17.929Z',
         '2020-11-11T10:51:36.790Z',
     ],
-    currency: 'R$',
-    local: 'pt-BR',
+    //moeda: 'BRL',
+    //local: 'pt-BR',
 };
 
 const c2 = {
@@ -38,8 +38,8 @@ const c2 = {
         '2020-06-25T18:49:59.371Z',
         '2020-07-26T12:01:20.894Z',
     ],
-    currency: 'USD',
-    local: 'en-US',
+    //moeda: 'USD',
+    //local: 'en-US',
 };
 
 const contas = [c1, c2];
@@ -162,20 +162,20 @@ const displayMovimentos = function(conta, ordem = false) {
 // Calcula e exibe o saldo da conta
 const calcDisplaySaldo = function(conta) {
     conta.saldo = conta.movimentos.reduce((total, item) => total + item, 0);
-    labelSaldo.textContent = `R$ ${conta.saldo.toFixed(2)}`;
+    labelSaldo.textContent = `${conta.saldo.toFixed(2)}`;
 };
 
 // Calcula e exige as estatísticas da conta
 const calcDisplaySumario = function(conta) {
     // exibe soma depósitos
     const entrada = conta.movimentos.filter(movimento => movimento > 0).reduce((total, movimento) => total + movimento, 0);
-    labelEntrada.textContent = `R$ ${entrada.toFixed(2)}`; 
+    labelEntrada.textContent = `${entrada.toFixed(2)}`; 
     // exibe soma saques
     const saida = conta.movimentos.filter(movimento => movimento < 0).reduce((total, movimento) => total + movimento, 0);
-    labelSaida.textContent = `R$ ${Math.abs(saida.toFixed(2))}`; 
+    labelSaida.textContent = `${Math.abs(saida.toFixed(2))}`; 
     // exibe rendimento que a conta irá ganhar com os depósitos
     const rendimento = conta.movimentos.filter(entrada => entrada > 0).map(entrada => (entrada * conta.rendimento) / 100).filter(entrada => entrada >= 1).reduce((total, entrada) => total + entrada, 0);
-    labelRendimento.textContent = `R$ ${rendimento.toFixed(2)}`; 
+    labelRendimento.textContent = `${rendimento.toFixed(2)}`; 
 };
 
 // Transferir para outra conta
@@ -204,10 +204,13 @@ btnEmprestar.addEventListener("click", function(e) {
     e.preventDefault();
     const valor = Math.floor(inputEmprestarValor.value);
     if (valor <= contaAtiva.saldo * 0.1) {
-        contaAtiva.movimentos.push(valor);
-        contaAtiva.movimentosDatas.push(new Date().toISOString());
-        // cria a data do empréstimo
-        atualizaUI(contaAtiva);
+        // cria um delay de 4seg para aprovar o empréstimo
+        setTimeout(function () {
+            contaAtiva.movimentos.push(valor);
+            contaAtiva.movimentosDatas.push(new Date().toISOString());
+            // cria a data do empréstimo
+            atualizaUI(contaAtiva);
+        }, 4000);
     }
     // limpa os inputs
     inputEmprestarValor.value = "";
