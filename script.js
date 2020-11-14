@@ -19,8 +19,8 @@ const c1 = {
         '2020-11-07T23:36:17.929Z',
         '2020-11-11T10:51:36.790Z',
     ],
-    //moeda: 'BRL',
-    //local: 'pt-BR',
+    moeda: 'BRL',
+    local: 'pt-BR',
 };
 
 const c2 = {
@@ -38,8 +38,8 @@ const c2 = {
         '2020-06-25T18:49:59.371Z',
         '2020-07-26T12:01:20.894Z',
     ],
-    //moeda: 'USD',
-    //local: 'en-US',
+    moeda: 'USD',
+    local: 'en-US',
 };
 
 const contas = [c1, c2];
@@ -103,7 +103,15 @@ const formataData = function(data) {
     const mes = `${data.getMonth() + 1}`.padStart(2, "0");
     const dia = `${data.getDate()}`.padStart(2, "0");
     return `${dia}/${mes}/${ano}`;
-} 
+}
+
+// Formatar número
+const formataNumeros = function(valor, local, moeda) {
+    return new Intl.NumberFormat(local, {
+    style: "currency",
+    currency: moeda,
+    }).format(valor);
+};
 
 // Login
 btnLogin.addEventListener("click", function(e) {
@@ -139,19 +147,19 @@ const displayMovimentos = function(conta, ordem = false) {
     // zera todo conteudo dos movimentos
     containerMovimentos.innerHTML = "";
     // exibir na ordem desejada
-    const movs = ordem ? conta.movimentos.slice().sort((a, b) => a - b) : conta.movimentos;
+    const movs = ordem ? contaAtiva.movimentos.slice().sort((a, b) => a - b) : contaAtiva.movimentos;
     // cria uma nova linha para cada movimento existente
     movs.forEach((movimento, i) => {
         const tipo = movimento > 0 ? "entrada" : "saida";
         // recebe a data e formata para exibição
-        const data = new Date(conta.movimentosDatas[i]);
+        const data = new Date(contaAtiva.movimentosDatas[i]);
         const dataMovimentacao = formataData(data);
         // cria as rows com os movimentos
         const movimentoItemHTML = `
             <div class="movimentos__item">
                 <div class="movimentos__tipo movimentos__tipo--${tipo}">${i + 1}. ${tipo}</div>
                 <div class="movimentos__data">${dataMovimentacao}</div>
-                <div class="movimentos__valor">${movimento.toFixed(2)}</div>
+                <div class="movimentos__valor">${formataNumeros(movimento, contaAtiva.local, contaAtiva.moeda)}</div>
             </div>
         `;
         // insere a nova linha no HTML
@@ -162,20 +170,20 @@ const displayMovimentos = function(conta, ordem = false) {
 // Calcula e exibe o saldo da conta
 const calcDisplaySaldo = function(conta) {
     conta.saldo = conta.movimentos.reduce((total, item) => total + item, 0);
-    labelSaldo.textContent = `${conta.saldo.toFixed(2)}`;
+    labelSaldo.textContent = formataNumeros(conta.saldo, conta.local, conta.moeda);
 };
 
 // Calcula e exige as estatísticas da conta
 const calcDisplaySumario = function(conta) {
     // exibe soma depósitos
     const entrada = conta.movimentos.filter(movimento => movimento > 0).reduce((total, movimento) => total + movimento, 0);
-    labelEntrada.textContent = `${entrada.toFixed(2)}`; 
+    labelEntrada.textContent = formataNumeros(entrada, conta.local, conta.moeda); 
     // exibe soma saques
     const saida = conta.movimentos.filter(movimento => movimento < 0).reduce((total, movimento) => total + movimento, 0);
-    labelSaida.textContent = `${Math.abs(saida.toFixed(2))}`; 
+    labelSaida.textContent = formataNumeros(Math.abs(saida), conta.local, conta.moeda); 
     // exibe rendimento que a conta irá ganhar com os depósitos
     const rendimento = conta.movimentos.filter(entrada => entrada > 0).map(entrada => (entrada * conta.rendimento) / 100).filter(entrada => entrada >= 1).reduce((total, entrada) => total + entrada, 0);
-    labelRendimento.textContent = `${rendimento.toFixed(2)}`; 
+    labelRendimento.textContent = formataNumeros(rendimento, conta.local, conta.moeda); 
 };
 
 // Transferir para outra conta
@@ -235,6 +243,6 @@ let ordem = false;
 // Ordenar os movimentos
 btnOrdenar.addEventListener("click", function(e) {
     e.preventDefault();
-    displayMovimentos(contaAtiva.movimentos, !ordem)
+    displayMovimentos(contaAtiva, !ordem)
     ordem = !ordem;
 });
