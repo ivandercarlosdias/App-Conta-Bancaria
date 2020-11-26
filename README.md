@@ -1,4 +1,4 @@
-# Bankist App
+# App Conta Bancária
 
 Projeto em Javascript de um App que realiza algumas funcionalidades básicas de um banco.
 
